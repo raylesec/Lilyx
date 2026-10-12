@@ -1,0 +1,332 @@
+/* ============================================================
+   LILYX — Estilos globais
+   Identidade visual: tema escuro profundo com rosa-neon.
+   As variáveis definem os tokens da marca usados em todo o app.
+   ============================================================ */
+
+:root {
+  /* Paleta oficial LILYX */
+  --cor-fundo: #0b0b0f;          /* preto profundo — fundo principal */
+  --cor-destaque: #ff2d95;       /* rosa-neon — destaques e ativos */
+  --cor-destaque-suave: #ff8fc7; /* rosa suave — detalhes secundários */
+  --cor-texto: #f5f5f7;          /* branco gelo — textos principais */
+  --cor-superficie: #1b1b24;     /* cinza tecnológico — cartões/painéis */
+  --cor-texto-suave: #a1a1aa;    /* cinza secundário — textos auxiliares */
+
+  /* Tokens derivados */
+  --cor-borda: rgba(255, 255, 255, 0.07);
+  --cor-borda-destaque: rgba(255, 45, 149, 0.45);
+  --sombra-cartao: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --branco-cartao: #17171f;
+  --raio: 14px;
+
+  /* Cores de severidade (escala consistente em toda a aplicação) */
+  --sev-critica: #ff2d95;
+  --sev-alta: #ff7a45;
+  --sev-media: #ffc53d;
+  --sev-baixa: #4ade80;
+
+  /* Cores de status */
+  --status-ok: #4ade80;
+  --status-atendimento: #ffc53d;
+  --status-erro: #ff5c7a;
+
+  /* Tipografia geométrica moderna com fallbacks do sistema */
+  --fonte-base: 'Space Grotesk', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --fonte-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+
+  /* Dimensões do layout */
+  --largura-sidebar: 264px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: #2c2c38 var(--cor-fundo);
+}
+
+body {
+  font-family: var(--fonte-base);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  line-height: 1.55;
+  min-height: 100vh;
+  /* Brilho radial discreto no topo para profundidade sem excesso de neon */
+  background-image: radial-gradient(
+      ellipse 60% 40% at 70% -10%,
+      rgba(255, 45, 149, 0.07),
+      transparent
+    ),
+    radial-gradient(ellipse 40% 30% at 10% 0%, rgba(255, 143, 199, 0.04), transparent);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--cor-destaque-suave);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Foco visível e acessível em todos os elementos interativos */
+:focus-visible {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===================== Estrutura da aplicação ===================== */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--largura-sidebar) 1fr;
+  min-height: 100vh;
+}
+
+.app__conteudo {
+  padding: 32px 36px 48px;
+  max-width: 1280px;
+  width: 100%;
+}
+
+/* Cabeçalho de página */
+.pagina-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.pagina-titulo {
+  font-size: 1.6rem;
+}
+
+.pagina-subtitulo {
+  color: var(--cor-texto-suave);
+  font-size: 0.92rem;
+  margin-top: 4px;
+  max-width: 62ch;
+}
+
+/* Selo "dados demonstrativos" — reforça que tudo é simulado */
+.selo-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--cor-destaque-suave);
+  border: 1px solid rgba(255, 45, 149, 0.35);
+  background: rgba(255, 45, 149, 0.08);
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.selo-demo::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cor-destaque);
+  box-shadow: 0 0 8px var(--cor-destaque);
+  flex-shrink: 0;
+}
+
+/* Grade geral de cartões por página */
+.grade {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.grade--kpis {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grade--2col {
+  grid-template-columns: 1.4fr 1fr;
+}
+
+.grade--2col-equal {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ===================== Barra lateral ===================== */
+
+.sidebar {
+  background: #101018;
+  border-right: 1px solid var(--cor-borda);
+  padding: 26px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar__marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+}
+
+.sidebar__nome {
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--cor-texto);
+}
+
+.sidebar__nome span {
+  color: var(--cor-destaque);
+}
+
+.sidebar__versao {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.sidebar__navegacao {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cor-texto);
+}
+
+.nav-item--ativo {
+  background: rgba(255, 45, 149, 0.12);
+  color: var(--cor-texto);
+  position: relative;
+}
+
+.nav-item--ativo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--cor-destaque);
+  box-shadow: 0 0 10px rgba(255, 45, 149, 0.6);
+}
+
+.nav-item--ativo .nav-item__icone {
+  color: var(--cor-destaque);
+}
+
+.sidebar__rodape {
+  margin-top: auto;
+  padding: 14px;
+  border: 1px dashed var(--cor-borda);
+  border-radius: 12px;
+  font-size: 0.74rem;
+  color: var(--cor-texto-suave);
+}
+
+.sidebar__rodape strong {
+  color: var(--cor-destaque-suave);
+  font-weight: 500;
+}
+
+/* ===================== Responsividade =====================
+   Em telas menores a barra lateral vira navegação horizontal no topo. */
+@media (max-width: 920px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    gap: 14px;
+    padding: 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .sidebar__navegacao {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav-item {
+    width: auto;
+    white-space: nowrap;
+    border: 1px solid var(--cor-borda);
+  }
+
+  .nav-item--ativo::before {
+    display: none;
+  }
+
+  .nav-item--ativo {
+    border-color: var(--cor-borda-destaque);
+  }
+
+  .sidebar__rodape {
+    display: none;
+  }
+
+  .app__conteudo {
+    padding: 22px 18px 40px;
+  }
+
+  .grade--kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grade--2col,
+  .grade--2col-equal {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .grade--kpis {
+    grid-template-columns: 1fr;
+  }
+}

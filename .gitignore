@@ -1,0 +1,23 @@
+# Dependências
+node_modules
+
+# Build
+dist
+
+# Logs
+*.log
+npm-debug.log*
+
+# Ambiente local
+.env
+.env.local
+
+# Editores e sistema operacional
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
+# Pasta de anotações pessoais (fora da build)
+Explicação/

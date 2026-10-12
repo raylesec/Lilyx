@@ -1,0 +1,623 @@
+/* ============================================================
+   LILYX — Componentes reutilizáveis
+   Cartões, KPIs, selos (badges), tabelas, abas, steppers,
+   gráficos, formulários e estados (vazio/carregando/erro).
+   ============================================================ */
+
+/* ===================== Cartões ===================== */
+
+.cartao {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    var(--branco-cartao);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 20px;
+  box-shadow: var(--sombra-cartao);
+}
+
+.cartao__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.cartao__titulo {
+  font-size: 0.98rem;
+}
+
+.cartao__subtitulo {
+  font-size: 0.78rem;
+  color: var(--cor-texto-suave);
+  margin-top: 2px;
+}
+
+/* ===================== Cartão de indicador (KPI) ===================== */
+
+.kpi {
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi__icone {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 45, 149, 0.1);
+  border: 1px solid rgba(255, 45, 149, 0.25);
+  color: var(--cor-destaque-suave);
+  margin-bottom: 14px;
+}
+
+.kpi__valor {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi__titulo {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  margin-top: 2px;
+}
+
+.kpi__detalhe {
+  font-size: 0.74rem;
+  color: var(--cor-texto-suave);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kpi__linha-destaque {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cor-destaque), transparent 70%);
+}
+
+/* Tendência (melhora/piora em relação à análise anterior) */
+.tendencia {
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tendencia--melhor {
+  color: var(--status-ok);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.tendencia--pior {
+  color: var(--status-erro);
+  background: rgba(255, 92, 122, 0.1);
+}
+
+.tendencia--estavel {
+  color: var(--cor-texto-suave);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===================== Selos (badges) ===================== */
+
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.selo__ponto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Severidades */
+.selo--critica { color: var(--sev-critica); background: rgba(255, 45, 149, 0.12); border: 1px solid rgba(255, 45, 149, 0.3); }
+.selo--alta    { color: var(--sev-alta);    background: rgba(255, 122, 69, 0.12); border: 1px solid rgba(255, 122, 69, 0.3); }
+.selo--media   { color: var(--sev-media);   background: rgba(255, 197, 61, 0.1);  border: 1px solid rgba(255, 197, 61, 0.28); }
+.selo--baixa   { color: var(--sev-baixa);   background: rgba(74, 222, 128, 0.1);  border: 1px solid rgba(74, 222, 128, 0.28); }
+
+/* Situação do acompanhamento */
+.selo--aberto       { color: var(--status-erro);        background: rgba(255, 92, 122, 0.1); border: 1px solid rgba(255, 92, 122, 0.3); }
+.selo--em-analise   { color: var(--status-atendimento); background: rgba(255, 197, 61, 0.1); border: 1px solid rgba(255, 197, 61, 0.28); }
+.selo--corrigido    { color: var(--status-ok);          background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.28); }
+.selo--riso-aceito  { color: var(--cor-texto-suave);    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--cor-borda); }
+
+/* Status de etapa de pipeline */
+.selo--sucesso     { color: var(--status-ok);          background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.28); }
+.selo--falha       { color: var(--status-erro);        background: rgba(255, 92, 122, 0.1); border: 1px solid rgba(255, 92, 122, 0.3); }
+.selo--executando  { color: var(--cor-destaque-suave); background: rgba(255, 45, 149, 0.12); border: 1px solid rgba(255, 45, 149, 0.3); }
+
+/* Status de etapa de pipeline (continuação) */
+.selo--pendente    { color: var(--cor-texto-suave);    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--cor-borda); }
+
+/* ===================== Tabelas ===================== */
+
+.tabela-scroll {
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabela th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--cor-borda);
+  white-space: nowrap;
+}
+
+.tabela td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--cor-borda);
+  vertical-align: middle;
+}
+
+.tabela tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela tbody tr {
+  transition: background 0.12s ease;
+}
+
+.tabela tbody tr:hover {
+  background: rgba(255, 45, 149, 0.04);
+}
+
+.tabela .celda-id {
+  font-family: var(--fonte-mono);
+  font-size: 0.78rem;
+  color: var(--cor-destaque-suave);
+  white-space: nowrap;
+}
+
+.tabela .celda-descricao {
+  max-width: 340px;
+  color: var(--cor-texto);
+}
+
+.tabela .celda-auxiliar {
+  color: var(--cor-texto-suave);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* ===================== Abas (abas de ferramenta) ===================== */
+
+.abas {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--cor-borda);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.aba {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--cor-texto-suave);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 10px 16px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.aba:hover {
+  color: var(--cor-texto);
+}
+
+.aba--ativa {
+  color: var(--cor-texto);
+  border-bottom-color: var(--cor-destaque);
+}
+
+/* ===================== Filtros e formulários ===================== */
+
+.filtros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 170px;
+  flex: 1;
+  max-width: 260px;
+}
+
+.campo--rotulo {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cor-texto-suave);
+}
+
+.campo select,
+.campo input {
+  appearance: none;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 9px;
+  color: var(--cor-texto);
+  font-family: inherit;
+  font-size: 0.86rem;
+  padding: 9px 12px;
+  transition: border-color 0.15s ease;
+}
+
+.campo select:hover,
+.campo input:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.campo select:focus,
+.campo input:focus {
+  outline: none;
+  border-color: var(--cor-borda-destaque);
+}
+
+.botao-fantasma {
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-suave);
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 9px 16px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.botao-fantasma:hover {
+  border-color: var(--cor-borda-destaque);
+  color: var(--cor-destaque-suave);
+}
+
+/* ===================== Lista de status (por projeto) ===================== */
+
+.lista-status {
+  display: flex;
+  flex-direction: column;
+}
+
+.lista-status__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.lista-status__item:last-child {
+  border-bottom: none;
+}
+
+.lista-status__info strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.lista-status__info span {
+  font-size: 0.76rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ===================== Stepper de pipeline ===================== */
+
+.pipeline-item {
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.pipeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.pipeline-item__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.pipeline-item__ref {
+  font-family: var(--fonte-mono);
+  font-size: 0.8rem;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  padding: 3px 10px;
+  border-radius: 7px;
+}
+
+.pipeline-item__meta {
+  margin-left: auto;
+  font-size: 0.76rem;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+/* Etapas em linha */
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+}
+
+.stepper__etapa {
+  flex: 1;
+  min-width: 108px;
+  position: relative;
+  text-align: center;
+  padding: 0 6px;
+}
+
+/* Linha conectora entre etapas */
+.stepper__etapa:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: calc(50% + 18px);
+  right: calc(-50% + 18px);
+  height: 2px;
+  background: var(--cor-borda);
+}
+
+.stepper__etapa--concluida:not(:last-child)::after {
+  background: rgba(74, 222, 128, 0.5);
+}
+
+.stepper__circulo {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cor-superficie);
+  border: 2px solid var(--cor-borda);
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  position: relative;
+  z-index: 1;
+}
+
+.stepper__etapa--sucesso .stepper__circulo {
+  border-color: var(--status-ok);
+  color: var(--status-ok);
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.stepper__etapa--falha .stepper__circulo {
+  border-color: var(--status-erro);
+  color: var(--status-erro);
+  background: rgba(255, 92, 122, 0.08);
+}
+
+.stepper__etapa--executando .stepper__circulo {
+  border-color: var(--cor-destaque);
+  color: var(--cor-destaque-suave);
+  background: rgba(255, 45, 149, 0.1);
+  animation: pulsar 1.6s ease-in-out infinite;
+}
+
+@keyframes pulsar {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 45, 149, 0.35); }
+  50%      { box-shadow: 0 0 0 7px rgba(255, 45, 149, 0); }
+}
+
+.stepper__nome {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.stepper__duracao {
+  font-size: 0.7rem;
+  color: var(--cor-texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+
+.stepper__mensagem {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: var(--status-erro);
+  background: rgba(255, 92, 122, 0.07);
+  border: 1px solid rgba(255, 92, 122, 0.25);
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+
+/* ===================== Gráficos ===================== */
+
+/* Barras horizontais (distribuição por severidade) */
+.barras {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.barras__linha {
+  display: grid;
+  grid-template-columns: 86px 1fr 34px;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+}
+
+.barras__rastro {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barras__preenchimento {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.barras__valor {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-texto-suave);
+}
+
+/* Gráfico de linhas (tendências do histórico) */
+.tendencia-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.legendas {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.76rem;
+  color: var(--cor-texto-suave);
+  margin-top: 10px;
+}
+
+.legendas__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendas__traco {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* ===================== Estados: vazio / carregando ===================== */
+
+.estado-vazio {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--cor-texto-suave);
+}
+
+.estado-vazio__icone {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-destaque-suave);
+}
+
+.estado-vazio__titulo {
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+  margin-bottom: 4px;
+}
+
+.estado-vazio__descricao {
+  font-size: 0.82rem;
+  max-width: 40ch;
+  margin: 0 auto 16px;
+}
+
+/* Esqueleto de carregamento (shimmer) */
+.esqueleto {
+  border-radius: 10px;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(255, 255, 255, 0.04) 70%
+  );
+  background-size: 200% 100%;
+  animation: brilho 1.3s linear infinite;
+}
+
+.esqueleto--cartao {
+  height: 110px;
+}
+
+.esqueleto--linha {
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+@keyframes brilho {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* Nota de simulação (integrações ainda não conectadas) */
+.nota-simulacao {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--cor-borda);
+  border-left: 3px solid var(--cor-destaque);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.nota-simulacao strong {
+  color: var(--cor-destaque-suave);
+  font-weight: 600;
+}
+
+.nota-simulacao svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--cor-destaque-suave);
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="lg" x1="12" y1="6" x2="38" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8FC7"/>
+      <stop offset="0.5" stop-color="#FF2D95"/>
+      <stop offset="1" stop-color="#FF2D95"/>
+    </linearGradient>
+    <filter id="lgw" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="1.15" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="48" height="48" rx="10" fill="#0B0B0F"/>
+  <g filter="url(#lgw)" stroke="url(#lg)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 4 L10 9 Q8 9.8 8 12 L8 24 Q8 34 15 40.5 Q19.5 44 24 45 Q28.5 44 33 40.5 Q40 34 40 24 L40 12 Q40 9.8 38 9 Z" stroke-width="2.2"/>
+    <path d="M17.5 16.5 L30.5 30" stroke-width="3.2"/>
+    <path d="M30.5 16.5 L17.5 30" stroke-width="3.2"/>
+    <g fill="#FF8FC7" stroke="none">
+      <circle cx="17.5" cy="16.5" r="1.9"/>
+      <circle cx="30.5" cy="16.5" r="1.9"/>
+      <circle cx="17.5" cy="30" r="1.9"/>
+      <circle cx="30.5" cy="30" r="1.9"/>
+    </g>
+  </g>
+</svg>

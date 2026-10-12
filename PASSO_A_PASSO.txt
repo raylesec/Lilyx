@@ -1,0 +1,198 @@
+================================================================
+LILYX — PASSO A PASSO DA IMPLANTAÇÃO (FASE 1)
+Plataforma de segurança de software — protótipo com dados simulados
+Data: 11/10/2026
+================================================================
+
+RESUMO EXECUTIVO
+----------------
+Foi construído um painel web com 5 módulos (Dashboard, Code Security,
+Security Findings, Pipeline Monitor e Histórico), tema escuro com
+accento rosa neon, navegação lateral e 100% de dados simulados.
+Stack mínima: React 18 + Vite 5, CSS puro, gráficos e ícones feitos à
+mão. O build de produção foi verificado (51 módulos, ~56 KB gzip).
+
+
+1. AMBIENTE E FERRAMENTAS
+-------------------------
+PASSO 1.1 — Localizar/confirmar o Node.js no Windows
+  - Verificado: Node v24.20.0 instalado via winget em:
+    C:\Users\rayle\AppData\Local\Microsoft\WinGet\Packages\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\node-v24.20.0-win-x64
+  - PROBLEMA ENCONTRADO: o PATH do terminal não incluí essa pasta,
+    então `node`/`npm` não eram reconhecidos.
+  - SOLUÇÃO (por sessão): prefixar o PATH:
+      $env:PATH = "<pasta do node>;" + $env:PATH
+  - POR QUE ASSIM: evitar reconfigurar o PATH permanente sem
+    necessidade; funciona em qualquer PowerShell novo e é reversível.
+
+PASSO 1.2 — Bloqueio de política de execução do PowerShell
+  - PROBLEMA: scripts .ps1 bloqueados (execution policy); `npm`
+    direto falhava.
+  - SOLUÇÃO: usar sempre `npm.cmd` / `npx.cmd`.
+  - LÓGICA: contorna a policy sem alterar configurações globais.
+
+2. ESQUELETO DO PROJETO (scaffold manual)
+-----------------------------------------
+PASSO 2.1 — package.json
+  - Apenas react@18, react-dom@18 (deps) e vite@5 +
+    @vitejs/plugin-react (devDeps).
+  - LÓGICA: zero dependências extras — cada biblioteca evitada é
+    menos coisa para auditar num projeto sobre SEGURANÇA.
+
+PASSO 2.2 — vite.config.js
+  - Só plugin react + base relativa ('./'), para o build rodar em
+    qualquer caminho.
+
+PASSO 2.3 — index.html
+  - meta charset/viewport, pt-BR, título "LILYX", favicon.svg,
+    div#root e module script para /src/main.jsx.
+
+PASSO 2.4 — .gitignore (node_modules, dist, logs) e public/favicon.svg
+  - Monograma L+X próprio (L dominante + X em rosa) para marca.
+
+3. ESTILO GLOBAL — design tokens primeiro
+-----------------------------------------
+PASSO 3.1 — styles/index.css (parte 1)
+  - TODOS os tokens antes de qualquer componente: cores (fundo
+    #0a0a12, superfícies #10101c/#161624/#1d1d30, bordas #23233a,
+    texto #e8e8f0/#9a9ab0, accent #ff2d95 rosa neon + #ff6bb3),
+    severidades (crítica #ff4d6d, alta #ff7a45, média #ffc53d,
+    baixa #4ade80), espaçamentos, raios, sombras, fonte do sistema.
+PASSO 3.2 — styles/index.css (parte 2)
+  - Reset leve (box-sizing), tipografia base, app-shell flex,
+    sidebar fixa 260px com itens de navegação (.ativo destacado com
+    borda rosa), conteúdo rolável, responsivo (<900px a sidebar vira
+    barra horizontal rolável).
+
+PASSO 3.3 — styles/components.css (partes 1–3)
+  - Cards, KPI/StatCard, selos (.selo--sucesso/.falha/.executando/
+    .pendente/.info), tabelas, abas, filtros/selects, stepper de
+    pipeline (estados ok/falha/executando/pendente +
+    .stepper__mensagem), barras de gráfico, gráfico de linha,
+    estados vazios, skeletons animados e .nota-simulacao.
+  - LÓGICA: nomes CSS estáveis para a JSX consumir.
+  - OBSERVAÇÃO: na divisão em partes, .selo--pendente e
+    .stepper__mensagem foram perdidos uma vez e restaurados; fazer
+    check visual final neles.
+
+4. CAMADA DE DADOS — única fonte da verdade
+-------------------------------------------
+PASSO 4.1 — data/mockData.js
+  - 4 projetos; findings LSX-0101–LSX-0114 (severidade, status,
+    tipo, arquivo, linha, descrição, correção sugerida); deps
+    vulneráveis (versão atual vs. segura, CVSS); imagens de container
+    com CVEs/tamanhos; 3 pipelines com etapas ordenadas (gate de
+    segurança na última etapa); 8 semanas de histórico (contagens por
+    severidade + score de qualidade); métricas agregadas.
+  - LÓGICA: UI NUNCA inventa número — KPIs são .filter/.reduce sobre
+    esses arrays. UI e dados não divergem; trocar pela API real =
+    trocar UM arquivo.
+
+PASSO 4.2 — utils/format.js
+  - formatarData/formatarDataHora (Intl pt-BR), rótulos amigáveis de
+    severidade/status e clx() para classes condicionais.
+
+PASSO 4.3 — hooks/useSimulacaoCarregamento.js
+  - Simula latência (~1,3 s) e expõe `carregando`.
+  - LÓGICA: permite skeletons reais; com API real, só troca o corpo.
+
+5. COMPONENTES (blocos reutilizáveis)
+-------------------------------------
+PASSO 5.1 — icons.jsx: ícones SVG inline (stroke 1.8, currentColor).
+  LÓGICA: zero icon-fonte, traço controlável.
+
+PASSO 5.2 — Logo.jsx: monograma geométrico L+X; gradientes escopados
+  por useId (evita colisão de <linearGradient> se o logo aparecer
+  duas vezes na mesma página).
+
+PASSO 5.3 — Layout.jsx (sidebar+main), Badge.jsx (valor -> classe),
+  Card.jsx, StatCard.jsx (KPI c/ variação), PageHeader.jsx,
+  EmptyState.jsx, Estados.jsx (EsqueletoCarregando + NotaSimulacao).
+
+PASSO 5.4 — Gráficos sem biblioteca:
+  - BarChart.jsx: barras CSS com % calculado do maior valor.
+  - TrendChart.jsx: SVG puro (polyline multi-série, escala pelo
+    máximo, legenda, pontos).
+  - LÓGICA: para séries pequenas, SVG manual é mais leve e mais fácil
+    de estilizar que chart.js/recharts.
+
+6. PÁGINAS (os 5 módulos)
+-------------------------
+PASSO 6.1 — App.jsx: shell com sidebar; troca de página via
+  useState com as chaves dashboard | codeSecurity | findings |
+  pipelines | historico. LÓGICA: estado simples > router externo
+  (zero deps), e cada página pode receber `pagina` se precisar de
+  parâmetros no futuro.
+
+PASSO 6.2 — Dashboard.jsx
+  - KPIs derivados dos mocks (críticas abertas, médias, pipelines
+    ativos, score médio de qualidade) com variação vs. semana
+    anterior do histórico.
+  - Distribuição por severidade (BarChart), dependências
+    vulneráveis, imagens de container e últimas verificações com o
+    selo do gate. NotaSimulacao no rodapé.
+
+PASSO 6.3 — CodeSecurity.jsx
+  - 3 abas: "Código (SAST)" (tabela de findings + resumo),
+    "Dependências" (versão atual vs. segura, CVSS, correção em uma
+    linha) e "Imagens de container" (CVEs, tamanho, tag).
+
+PASSO 6.4 — Findings.jsx
+  - Tabela completa com filtros COMBINÁVEIS: severidade, status,
+    tipo e busca por texto (código/arquivo/descrição). EmptyState
+  - quando a combinação não retorna nada.
+  - LÓGICA: o usuário do módulo de findings pensa em "críticas ABERTAS
+    de tipo XSS" — os filtros precisam compor, não excluir.
+
+PASSO 6.5 — PipelineMonitor.jsx
+  - Um Card por pipeline: stepper horizontal das etapas ordenadas;
+    STATUS GERAL DERIVADO: qualquer etapa 'falha' com gate =>
+    reprovado; 'executando' => em execução; senão => aprovado.
+  - Mensagem de falha exibida sob o stepper da etapa que quebrou.
+  - LÓGICA: derivar (e nunca armazenar) o status evita a classe
+    clássica de bug em que o banner diz "aprovado" e o passo está
+    vermelho.
+
+PASSO 6.6 — History.jsx
+  - TrendChart da evolução semanal (4 séries de severidade),
+  - "Leitura rápida": deltas entre as duas últimas análises com
+    indicador verde/vermelho (menor é melhor para vulns; maior é
+    melhor para qualidade);
+  - Tabela de todas as análises anteriores com variação do total em
+    relação à análise imediatamente anterior e síntese do período.
+
+7. VERIFICAÇÃO END-TO-END
+-------------------------
+PASSO 7.1 — npm.cmd install
+  - 1ª TENTATIVA FALHOU: erro EPERM/cleanup + "'node' não é
+    reconhecido" no postinstall do esbuild — o npm rodava mas o PATH
+    interno dele não tinha a pasta do Node.
+  - CORREÇÃO: limpar node_modules, setar $env:PATH ANTES de lançar o
+    npm e rodar novamente (em background para não bloquear). OK:
+    lockfile gerado.
+PASSO 7.2 — npm run build (vite build)
+  - SUCESSO: 51 módulos transformados em ~1,7 s; dist/ com index.html,
+    CSS 13,95 KB e JS 178,78 KB (~56 KB gzip). Isso prova que TODOS
+    os imports resolvem e toda a JSX compila sem erro de sintaxe.
+PASSO 7.3 — Servidor de desenvolvimento (vite --port 5173)
+  - HTTP 200 na raiz e 200 na transformação de cada módulo principal
+    (App.jsx, as 5 páginas, mocks, Layout, Badge, TrendChart) —
+    nenhum erro de resolução em runtime.
+PASSO 7.4 — Checklist visual pendente (recomendado abrir no browser):
+  - .selo--pendente e .stepper__mensagem presentes e legíveis;
+  - responsividade <900px;
+  - estado vazio dos filtros em Security Findings;
+  - mensagem de falha do pipeline reprovado.
+
+8. ESTADO FINAL E PRÓXIMOS PASSOS
+---------------------------------
+Arquivos criados: package.json, vite.config.js, index.html,
+.gitignore, public/favicon.svg, README.md, PASSO_A_PASSO.txt e 24
+arquivos em src/ (main, App, 2 CSS, 1 mock, 1 util, 1 hook, 12
+componentes/gráficos, 5 páginas).
+
+Próximos passos sugeridos:
+  - Detalhar cada finding (trecho de código + diff de correção);
+  - Conectar a camada de dados a uma API real (trocar o corpo do
+    hook + fonte dos arrays);
+  - Persistência/backend e autenticação.
