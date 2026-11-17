@@ -91,7 +91,7 @@ Projeto Lilyx/
 4. **Semântica + acessibilidade**: HTML semântico (`nav`, `main`, `table` com `scope`), ARIA nos steppers/filtros, contraste adequado no tema escuro.
 5. **Português brasileiro** em toda a interface, conforme o público-alvo.
 
-## Próximos passos (fora da fase 1)
+## Próximos passos
 
 - Substituir `mockData.js` por integrações reais (ex.: API interna, scanners).
 - Detalhes de cada finding (código da vulnerabilidade, sugestão de correção).
